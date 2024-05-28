@@ -3,7 +3,6 @@ package huffman;
 import java.util.LinkedList;
 import bitArr.BitArr;
 
-import java.util.BitSet;
 import java.util.HashMap;
 import java.io.ByteArrayOutputStream;
 import java.io.RandomAccessFile;
@@ -88,10 +87,9 @@ public class Huffman{
 
     public BitArr dictToBitArr(HashMap <Byte, String> dict){
         int amount = dict.size();
-        BitArr b = new BitArr(amount * 4 + 4);  // 8 bits for the char and x for the bits 6 for the amount of bits (+ 4 bytes for the amount of chars)
+        BitArr b = new BitArr(amount * 4 + 4);  // 8 bits para o char e x para os bits 6 para a quantidade de bits (+ 4 bytes para a quantidade de chars)
         b.pushInt(amount);
         for(Byte c : dict.keySet()){
-            System.out.println(toBinaryString(c.byteValue()) + " : " + dict.get(c));
             b.pushByte(c);
             String s = dict.get(c);
             byte size = (byte) s.length();
@@ -129,8 +127,6 @@ public class Huffman{
         char[] current = new char[30];
         int j = 0;
 
-        System.out.println(dict);
-
         for (int i = 0; i < size; i++) {
             current[j] = b.getBit(i) ? '1' : '0';
             j++;
@@ -139,10 +135,6 @@ public class Huffman{
             if (dict.containsKey(s)) {
                 byteStream.write(dict.get(s));
                 j = 0;
-            }
-
-            if (i % 1000000 == 0) {
-                System.out.println(i + " : " + size);
             }
         }
 
@@ -182,9 +174,6 @@ public class Huffman{
                 }
             }
 
-            if(i % 100000 == 0){
-                System.out.println(i + " : " + b.size);
-            }
         }
         return text;
     }
@@ -214,9 +203,7 @@ public class Huffman{
             if(b < 0){
                 s += 256;
             }
-            System.out.println(s + " : " + dict.get(b));   
         }
-        System.out.println("DICT: " + dict);
         BitArr bitsDict = dictToBitArr(dict);
         BitArr compressedBits = new BitArr((int)raf.length() * 23);
         raf.seek(0);
@@ -232,8 +219,6 @@ public class Huffman{
             }
         }
         raf.close();
-
-        System.out.println("PEINFEINEI");
 
         RandomAccessFile rafCompressed = new RandomAccessFile(compressedFile, "rw");
         rafCompressed.setLength(0);
@@ -325,7 +310,6 @@ public class Huffman{
         raf.close();
         int pos = 0;
         int amount = allBits.getInt(pos);
-        System.out.println("amount: " + amount);
         pos += 32;
         HashMap<Byte, String> dict = new HashMap<Byte, String>();
         for(int i = 0; i < amount; i++){
@@ -338,32 +322,20 @@ public class Huffman{
                 s += allBits.getBit(pos + j) ? "1" : "0";
             }
             pos += size;
-            System.out.println("b: " + toBinaryString(b) + " : " + size + " : " + s);
             dict.put(b, s);
         }
         int compressedSize = allBits.getInt(pos);
         pos += 32;
-        System.out.println("Dict size: " + dict.size());
-        System.out.println("compressedSize: " + compressedSize);
         BitArr compressedBits = new BitArr(compressedSize);
         for(int i = 0; i < compressedSize; i++){
             compressedBits.pushBit(allBits.getBit(pos + i));
         }
-        System.out.println("eondsf");
         //String decompressed = decompress(compressedBits, dict);
-        System.out.println("sexo");
-        System.out.println(dict);
-        for(Byte b : dict.keySet()){
-            System.out.println(b + " : " + toBinaryString(b) + " : " + dict.get(b));
-        }
         HashMap<String, Byte> invertedDict = invertDict(dict);
         String decompressed = decompressInverted(compressedBits, invertedDict);
-        System.out.println("decompressed: " + decompressed);
-        System.out.println("cxzcxcvdf");
         RandomAccessFile rafDecompressed = new RandomAccessFile(decompressedFile, "rw");
         rafDecompressed.setLength(0);
         //rafDecompressed.writeBytes(decompressed);
-        System.out.println("JIJCIWIC");
         rafDecompressed.write(decompressed.getBytes(StandardCharsets.UTF_8));
         rafDecompressed.close();
     }

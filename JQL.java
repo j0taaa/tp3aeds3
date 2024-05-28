@@ -213,7 +213,9 @@ public class JQL {
         "5 - Atualizar produto\n" +
         "6 - Pesquisar produtos\n" +
         "7 - Buscar elemento utilizando Arvore B\n" +
-        "8 - Parar"
+        "8 - Realizar Backup\n" +
+        "9 - Restaurar Backup\n" +
+        "10 - Parar"
       );
 
       nextAction = Integer.parseInt(sc.nextLine());
@@ -437,7 +439,7 @@ public class JQL {
           }
           
           break;
-          case 7:
+        case 7:
           System.out.println("Digite o id do produto que deseja buscar");
           int id3 = Integer.parseInt(sc.nextLine());
           Produto p3 = fm.getProdutoComArvore(id3);
@@ -447,7 +449,19 @@ public class JQL {
             System.out.println("Produto não encontrado");
           }
           break;
-          case 8:
+        case 8:
+          BackupManager bm = new BackupManager();
+          bm.backup();
+          break;
+        case 9:
+          System.out.println("Digite o número do backup que deseja restaurar");
+          int backupNumber = Integer.parseInt(sc.nextLine());
+          System.out.println("Qual algoritmo deseja utilizar? (huffman/lzw)");
+          String algoritmo = sc.nextLine();
+          BackupManager bm2 = new BackupManager();
+          bm2.retoreBackup(algoritmo, backupNumber);
+          break;
+        case 10:
           fm.close();
           sc.close();
           return;

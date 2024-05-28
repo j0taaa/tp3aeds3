@@ -1,5 +1,8 @@
 package bitArr;
 
+import java.io.RandomAccessFile;
+import java.util.Random;
+
 public class BitArr {
     byte[] arr;
     public int size = 0;
@@ -228,6 +231,40 @@ public class BitArr {
         return b;
     }
 
+    public void pushXBits(int n, int x){
+        int j = 1 << (x - 1);
+        for(int i = 0; i < x; i++){
+            pushBit((n & j) != 0);
+            j >>= 1;
+        }
+    }
+
+    public int popXBits(int x){
+        int n = 0;
+        int j = 1 << (x - 1);
+        for(int i = 0; i < x; i++){
+            if(popBit()){
+                n |= j;
+            }
+            j >>= 1;
+        }
+        return n;
+    }
+
+    public int getXBits(int pos, int x){
+        int n = 0;
+        int j = 1 << (x - 1);
+        for(int i = 0; i < x; i++){
+            if(getBit(pos)){
+                n |= j;
+            }
+            j >>= 1;
+            pos++;
+        }
+        return n;
+    }
+
+
     public void print(){
         for(int i = 0; i < size; i++){
             System.out.print(getBit(i) ? "1" : "0");
@@ -239,7 +276,7 @@ public class BitArr {
         int amountOfBytes = size / 8 + (size % 8 == 0 ? 0 : 1);
         byte[] trimmed = new byte[amountOfBytes];
         for(int i = 0; i < amountOfBytes; i++){
-            trimmed[i] = arr[i];
+            trimmed[i] = getByte(i * 8);
         }
         return trimmed;
     }
@@ -258,9 +295,13 @@ public class BitArr {
         return s;
     }
 
+    public void writeToFile(RandomAccessFile raf) throws Exception {
+        raf.write(getTrimmed());
+    }
+
     public static void main(String[] args) {
         BitArr b = new BitArr(32);
-        b.pushByte((byte)0b11000011);
+        b.pushXBits(298, 9);
         /* b.pushBit(true);
         b.pushBit(false);
         b.pushBit(true);
@@ -269,7 +310,11 @@ public class BitArr {
         b.pushTwoThirdsByte((byte)5); */
         b.print();
 
-        System.out.println(b.getByte(0));
+        System.out.println(b.getXBits(0, 9));
+        byte[] arr = b.getTrimmed();
+        for(int i = 0; i < arr.length; i++){
+            System.out.println(arr[i]);
+        }
         
     }
 
