@@ -417,8 +417,7 @@ public class JQL {
           System.out.println("Busca deve ser inclusiva ou exclusiva? (1/0)");
           boolean inclusivo = sc.nextLine().equals("1");
           Produto[] produtos1 = fm.findProdutosByTitle(titulo, inclusivo);
-          
-          
+
           Produto[] produtos2 = fm.findProdutosByCategory(category);
 
           Produto[] res2 = Util.mergeArrays(produtos1, produtos2, inclusivo);
@@ -437,7 +436,7 @@ public class JQL {
           if (!foundOne2) {
             System.out.println("Nenhum produto encontrado\n\n");
           }
-          
+
           break;
         case 7:
           System.out.println("Digite o id do produto que deseja buscar");
@@ -459,7 +458,7 @@ public class JQL {
           System.out.println("Qual algoritmo deseja utilizar? (huffman/lzw)");
           String algoritmo = sc.nextLine();
           BackupManager bm2 = new BackupManager();
-          bm2.retoreBackup(algoritmo, backupNumber);
+          bm2.restoreBackup(algoritmo, backupNumber);
           break;
         case 10:
           fm.close();

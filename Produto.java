@@ -1,3 +1,8 @@
+/**
+ * Classe que representa um Produto, com atributos como id, url, sku, name, description, price, currency, images, date, terms, section e image_downloads.
+ * Possui métodos para converter os atributos em arrays de bytes e vice-versa, além de métodos para comparar atributos do Produto com valores passados.
+ * @see ByteReader
+ */
 public class Produto {
 
   private boolean alive;
